@@ -2,39 +2,73 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PICO-8 Style Frame</title>
+<title>Client Answer Screen</title>
 <style>
   body {
-    background-color: #f5f5f5;
+    background: #f0f0f0;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
   }
 
-  .frame {
+  .tv-frame {
+    position: relative;
     width: 400px;
     height: 400px;
-    border: 20px solid red;
+    background: transparent;
+    border: 15px solid red; /* outer red frame */
     box-sizing: border-box;
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 2fr 1fr;
   }
 
-  /* Corner color blocks */
+  /* Colored corners behind the screen */
   .corner {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: 33%;
+    height: 33%;
   }
-  .corner.yellow { background-color: #f6d83f; }
-  .corner.blue   { background-color: #2d77ff; }
-  .corner.purple { background-color: #5a1c83; }
-  .corner.pink   { background-color: #d63d73; }
-  .corner.empty  { background-color: transparent; }
 
-  /* Center black screen */
+  .corner.tl { top: 0; left: 0; background: purple; }
+  .corner.tr { top: 0; right: 0; background: gold; }
+  .corner.bl { bottom: 0; left: 0; background: hotpink; }
+  .corner.br { bottom: 0; right: 0; background: dodgerblue; }
+
+  /* Black screen */
+  .screen {
+    position: absolute;
+    top: 12%;
+    left: 12%;
+    width: 76%;
+    height: 76%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+<div class="tv-frame">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="screen">
+    Hello Client!<br>
+    This is where your answer goes.
+  </div>
+</div>
+
+</body>
+</html>  /* Center black screen */
   .screen {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
