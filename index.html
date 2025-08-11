@@ -2,128 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>3D Wall-mounted Screen</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wall-mounted Client Screen</title>
 <style>
-:root {
-  --frame: #c92b2b;
+:root{
+  --frame-main: #c92b2b;       /* main red */
+  --frame-dark: #9e1f1f;       /* darker red for shading */
   --purple: #6e3aa9;
   --mustard: #d7b634;
   --pink: #d36a9e;
   --blue: #1976a8;
   --wall: #f3f2f0;
-  --inner-gap: 8%;
+  --inner-gap: 8%;             /* distance from outer frame to screen */
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
+/* page */
+html,body{height:100%;margin:0}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background: var(--wall);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 1200px; /* needed for 3D look */
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-/* TV wrapper with slight 3D rotation */
+/* tv container (keeps square ratio) */
 .tv {
   width: min(70vmin, 760px);
   aspect-ratio: 1/1;
-  transform: rotateY(-18deg);
-  transform-style: preserve-3d;
   position: relative;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,0.25));
 }
 
-/* Frame with depth */
+/* outer red frame with gradient for depth */
 .frame {
-  position: absolute;
-  inset: 0;
-  background: var(--frame);
-  border-radius: 8px;
-  box-shadow:
-    -12px 18px 25px rgba(0,0,0,0.4),
-    inset 0 0 20px rgba(0,0,0,0.5);
+  position:absolute;
+  inset:0;
+  border-radius:8px;
+  border: 22px solid transparent;
+  background: linear-gradient(145deg, var(--frame-main), var(--frame-dark));
+  box-sizing: border-box;
 }
 
-/* Frame side (right side depth) */
-.frame::before {
-  content: "";
-  position: absolute;
-  right: -20px;
-  top: 0;
-  width: 20px;
-  height: 100%;
-  background: #a02020; /* darker red for side */
-  transform: rotateY(90deg);
-  transform-origin: left;
-}
-
-/* Frame side (top depth) */
-.frame::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: -20px;
-  width: 100%;
-  height: 20px;
-  background: #b52626; /* slightly darker top edge */
-  transform: rotateX(90deg);
-  transform-origin: bottom;
-}
-
-/* Colored blocks */
+/* colored blocks behind the screen — bigger now */
 .color {
-  position: absolute;
-  z-index: 1;
-  opacity: 0.98;
+  position:absolute;
+  z-index:1;
+  border-radius:4px;
+  opacity:0.98;
 }
+.color.tl { top: calc(var(--inner-gap) - 5%); left: calc(var(--inner-gap) - 5%); width: 38%; height: 36%; background: var(--purple);}
+.color.tr { top: calc(var(--inner-gap) - 5%); right: calc(var(--inner-gap) - 5%); width: 36%; height: 36%; background: var(--mustard);}
+.color.bl { bottom: calc(var(--inner-gap) - 5%); left: calc(var(--inner-gap) - 5%); width: 38%; height: 36%; background: var(--pink);}
+.color.br { bottom: calc(var(--inner-gap) - 5%); right: calc(var(--inner-gap) - 5%); width: 36%; height: 36%; background: var(--blue);}
 
-.color.tl { top: var(--inner-gap); left: var(--inner-gap); width: 30%; height: 28%; background: var(--purple); }
-.color.tr { top: var(--inner-gap); right: var(--inner-gap); width: 28%; height: 28%; background: var(--mustard); }
-.color.bl { bottom: var(--inner-gap); left: var(--inner-gap); width: 30%; height: 28%; background: var(--pink); }
-.color.br { bottom: var(--inner-gap); right: var(--inner-gap); width: 28%; height: 28%; background: var(--blue); }
-
-/* Inner screen */
+/* inner black screen */
 .screen {
-  position: absolute;
-  top: var(--inner-gap);
+  position:absolute;
   left: var(--inner-gap);
-  width: calc(100% - var(--inner-gap) * 2);
-  height: calc(100% - var(--inner-gap) * 2);
-  background: linear-gradient(180deg, #0b0b0b 0%, #121212 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: calc(12px + 1.6vmin);
-  text-align: center;
-  padding: 10px;
-  box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
+  top: var(--inner-gap);
+  width: calc(100% - (var(--inner-gap) * 2));
+  height: calc(100% - (var(--inner-gap) * 2));
+  z-index:2;
+  background: linear-gradient(180deg, #0b0b0b 0%, #0f0f0f 100%);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.02), 0 8px 30px rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:3px;
+  overflow:hidden;
 }
 
-/* Editable text */
-.message {
+/* subtle pixel pattern */
+.screen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image: radial-gradient(rgba(255,255,255,0.006) 1px, transparent 1px);
+  background-size: 6px 6px;
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+/* editable message area */
+.message{
+  position:relative;
+  z-index:3;
+  color:#eeeeee;
+  font-size: calc(12px + 1.6vmin);
+  text-align:center;
+  line-height:1.3;
+  padding: 16px;
+  max-width: 86%;
   outline: none;
+  -webkit-user-modify: read-write;
+  word-wrap: break-word;
+}
+
+/* placeholder */
+.message:empty:before{
+  content: "Click here to write your answer to the client...";
+  color: rgba(255,255,255,0.55);
+}
+
+/* speaker pill */
+.speaker {
+  position:absolute;
+  left:50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  z-index:4;
+  width: 22%;
+  height: 8%;
+  min-width: 90px;
+  border-radius:8px;
+  background: var(--frame-main);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
+
+/* black oval inside speaker */
+.speaker::before{
+  content:"";
+  width: 62%;
+  height: 58%;
+  border-radius:999px;
+  background: #0b0b0b;
+  box-shadow: inset 0 -3px 6px rgba(255,255,255,0.02);
+}
+
+/* wall hook shadow */
+.frame::before{
+  content:"";
+  position:absolute;
+  top:-8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width:12%;
+  height:8px;
+  background: rgba(0,0,0,0.06);
+  border-radius:6px;
+  filter: blur(2px);
+}
+
+@media (max-width:520px){
+  :root{ --inner-gap: 9%;}
+  .frame { border-width: 14px;}
+  .speaker { bottom: -10px; }
 }
 </style>
 </head>
 <body>
+  <div class="tv">
+    <div class="frame">
+      <div class="color tl"></div>
+      <div class="color tr"></div>
+      <div class="color bl"></div>
+      <div class="color br"></div>
 
-<div class="tv">
-  <div class="frame">
-    <div class="color tl"></div>
-    <div class="color tr"></div>
-    <div class="color bl"></div>
-    <div class="color br"></div>
-    <div class="screen">
-      <div class="message" contenteditable="true">
-        Hello Client! Your answer goes here.
+      <div class="screen">
+        <div class="message" contenteditable="true">
+          Hello — click here to type your answer to the client.
+        </div>
       </div>
+
+      <div class="speaker"></div>
     </div>
   </div>
-</div>
-
 </body>
 </html>
