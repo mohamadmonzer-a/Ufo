@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PICO-8 Style Frame</title>
+<style>
+  body {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .frame {
+    width: 400px;
+    height: 400px;
+    border: 20px solid red;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 2fr 1fr;
+  }
+
+  /* Corner color blocks */
+  .corner {
+    width: 100%;
+    height: 100%;
+  }
+  .corner.yellow { background-color: #f6d83f; }
+  .corner.blue   { background-color: #2d77ff; }
+  .corner.purple { background-color: #5a1c83; }
+  .corner.pink   { background-color: #d63d73; }
+  .corner.empty  { background-color: transparent; }
+
+  /* Center black screen */
+  .screen {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hello {
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(to right, #ff66cc, #66ccff, #ccff66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sub {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #ff99cc;
+  }
+
+  .sub2 {
+    font-size: 14px;
+    margin-top: 5px;
+    color: #66ccff;
+  }
+
+  .heart {
+    margin-top: 10px;
+    color: #ff66aa;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="corner.purple corner purple"></div>
+    <div class="corner.empty corner empty"></div>
+    <div class="corner.yellow corner yellow"></div>
+    <div class="corner.pink corner pink"></div>
+    <div class="screen">
+      <div class="hello">HELLO WORLD</div>
+      <div class="sub">THIS IS PICO-8</div>
+      <div class="sub2">NICE TO MEET YOU</div>
+      <div class="heart">❤</div>
+    </div>
+    <div class="corner.blue corner blue"></div>
+    <div class="corner.empty corner empty"></div>
+    <div class="corner.empty corner empty"></div>
+    <div class="corner.empty corner empty"></div>
+  </div>
+</body>
+</html>
