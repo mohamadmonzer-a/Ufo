@@ -1,130 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Client Answer Screen</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wall-mounted Client Screen</title>
 <style>
-  body {
-    background: #f0f0f0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+:root{
+  --frame: #c92b2b;     /* refined red */
+  --purple: #6e3aa9;
+  --mustard: #d7b634;
+  --pink: #d36a9e;
+  --blue: #1976a8;
+  --wall: #f3f2f0;
+  --inner-gap: 8%;      /* distance from outer frame to screen */
+}
 
-  .tv-frame {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    background: transparent;
-    border: 15px solid red; /* outer red frame */
-    box-sizing: border-box;
-  }
+/* page */
+html,body{height:100%;margin:0}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: var(--wall);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
 
-  /* Colored corners behind the screen */
-  .corner {
-    position: absolute;
-    width: 33%;
-    height: 33%;
-  }
+/* tv container (keeps square ratio) */
+.tv {
+  width: min(70vmin, 760px);
+  aspect-ratio: 1/1;
+  position: relative;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,0.25));
+}
 
-  .corner.tl { top: 0; left: 0; background: purple; }
-  .corner.tr { top: 0; right: 0; background: gold; }
-  .corner.bl { bottom: 0; left: 0; background: hotpink; }
-  .corner.br { bottom: 0; right: 0; background: dodgerblue; }
+/* outer red frame */
+.frame {
+  position:absolute;
+  inset:0;
+  border-radius:8px;
+  border: 22px solid var(--frame);
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+}
 
-  /* Black screen */
-  .screen {
-    position: absolute;
-    top: 12%;
-    left: 12%;
-    width: 76%;
-    height: 76%;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    text-align: center;
-    padding: 10px;
-    box-sizing: border-box;
-  }
+/* colored blocks behind the screen */
+.color {
+  position:absolute;
+  z-index:1;
+  opacity:0.98;
+  border-radius:4px;
+}
+.color.tl { top: calc(var(--inner-gap) - 2%); left: calc(var(--inner-gap) - 2%); width: 30%; height: 28%; background: var(--purple);}
+.color.tr { top: calc(var(--inner-gap) - 2%); right: calc(var(--inner-gap) - 2%); width: 28%; height: 28%; background: var(--mustard);}
+.color.bl { bottom: calc(var(--inner-gap) - 2%); left: calc(var(--inner-gap) - 2%); width: 30%; height: 28%; background: var(--pink);}
+.color.br { bottom: calc(var(--inner-gap) - 2%); right: calc(var(--inner-gap) - 2%); width: 28%; height: 28%; background: var(--blue);}
+
+/* inner black screen */
+.screen {
+  position:absolute;
+  left: var(--inner-gap);
+  top: var(--inner-gap);
+  width: calc(100% - (var(--inner-gap) * 2));
+  height: calc(100% - (var(--inner-gap) * 2));
+  z-index:2;
+  background: linear-gradient(180deg, #0b0b0b 0%, #0f0f0f 100%);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.02), 0 8px 30px rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:3px;
+  overflow:hidden;
+}
+
+/* subtle pixel pattern */
+.screen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image: radial-gradient(rgba(255,255,255,0.006) 1px, transparent 1px);
+  background-size: 6px 6px;
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+/* editable message area (click to type) */
+.message{
+  position:relative;
+  z-index:3;
+  color:#eeeeee;
+  font-size: calc(12px + 1.6vmin);
+  text-align:center;
+  line-height:1.3;
+  padding: 16px;
+  max-width: 86%;
+  outline: none;
+  -webkit-user-modify: read-write;
+  word-wrap: break-word;
+}
+
+/* placeholder text when empty */
+.message:empty:before{
+  content: "Click here to write your answer to the client...";
+  color: rgba(255,255,255,0.55);
+}
+
+/* speaker pill at the bottom center of the frame */
+.speaker {
+  position:absolute;
+  left:50%;
+  bottom: -12px; /* slightly outside frame */
+  transform: translateX(-50%);
+  z-index:4;
+  width: 22%;
+  height: 8%;
+  min-width: 90px;
+  border-radius:8px;
+  background: var(--frame);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
+
+/* black oval inside speaker */
+.speaker::before{
+  content:"";
+  width: 62%;
+  height: 58%;
+  border-radius:999px;
+  background: #0b0b0b;
+  box-shadow: inset 0 -3px 6px rgba(255,255,255,0.02);
+}
+
+/* small wall hook shadow */
+.frame::before{
+  content:"";
+  position:absolute;
+  top:-8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width:12%;
+  height:8px;
+  background: rgba(0,0,0,0.06);
+  border-radius:6px;
+  filter: blur(2px);
+}
+
+/* responsiveness */
+@media (max-width:520px){
+  :root{ --inner-gap: 9%;}
+  .frame { border-width: 14px;}
+  .speaker { bottom: -10px; }
+}
 </style>
 </head>
 <body>
+  <div class="tv" role="img" aria-label="Wall-mounted screen">
+    <div class="frame" aria-hidden="true">
+      <div class="color tl"></div>
+      <div class="color tr"></div>
+      <div class="color bl"></div>
+      <div class="color br"></div>
 
-<div class="tv-frame">
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
-  <div class="screen">
-    Hello Client!<br>
-    This is where your answer goes.
-  </div>
-</div>
+      <div class="screen" role="region" aria-label="Client reply screen">
+        <div class="message" contenteditable="true" aria-label="Write your reply here">
+          Hello — click here to type your answer to the client.
+        </div>
+      </div>
 
-</body>
-</html>  /* Center black screen */
-  .screen {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    background-color: black;
-    color: white;
-    font-family: 'Courier New', monospace;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .hello {
-    font-size: 24px;
-    font-weight: bold;
-    background: linear-gradient(to right, #ff66cc, #66ccff, #ccff66);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .sub {
-    font-size: 14px;
-    margin-top: 10px;
-    color: #ff99cc;
-  }
-
-  .sub2 {
-    font-size: 14px;
-    margin-top: 5px;
-    color: #66ccff;
-  }
-
-  .heart {
-    margin-top: 10px;
-    color: #ff66aa;
-    font-size: 16px;
-  }
-</style>
-</head>
-<body>
-  <div class="frame">
-    <div class="corner.purple corner purple"></div>
-    <div class="corner.empty corner empty"></div>
-    <div class="corner.yellow corner yellow"></div>
-    <div class="corner.pink corner pink"></div>
-    <div class="screen">
-      <div class="hello">HELLO WORLD</div>
-      <div class="sub">THIS IS PICO-8</div>
-      <div class="sub2">NICE TO MEET YOU</div>
-      <div class="heart">❤</div>
+      <div class="speaker" aria-hidden="true"></div>
     </div>
-    <div class="corner.blue corner blue"></div>
-    <div class="corner.empty corner empty"></div>
-    <div class="corner.empty corner empty"></div>
-    <div class="corner.empty corner empty"></div>
   </div>
 </body>
 </html>
