@@ -6,27 +6,67 @@
 <title>Wall-mounted Client Screen</title>
 <style>
 :root{
-  --frame-main: #c92b2b;       /* main red */
-  --frame-dark: #9e1f1f;       /* darker red for shading */
+  --frame-main: #c92b2b;
+  --frame-dark: #9e1f1f;
   --purple: #6e3aa9;
   --mustard: #d7b634;
   --pink: #d36a9e;
   --blue: #1976a8;
   --wall: #f3f2f0;
-  --inner-gap: 8%;             /* distance from outer frame to screen */
+  --inner-gap: 8%;
 }
 
-/* page */
-html,body{height:100%;margin:0}
-body{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+html,body{
+  height:100%;
+  margin:0;
+}
+
+/* VIDEO INTRO STYLES */
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#intro-screen video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#skip-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 14px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 1000;
+}
+#skip-btn:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+/* MAIN PAGE (hidden until video ends) */
+#main-content {
+  display: none;
   background: var(--wall);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, system-ui, Arial;
 }
 
-/* tv container (keeps square ratio) */
+/* TV container */
 .tv {
   width: min(70vmin, 760px);
   aspect-ratio: 1/1;
@@ -34,7 +74,7 @@ body{
   filter: drop-shadow(0 18px 40px rgba(0,0,0,0.25));
 }
 
-/* outer red frame with gradient for depth */
+/* outer red frame with gradient */
 .frame {
   position:absolute;
   inset:0;
@@ -44,7 +84,7 @@ body{
   box-sizing: border-box;
 }
 
-/* colored blocks behind the screen — bigger now */
+/* colored blocks */
 .color {
   position:absolute;
   z-index:1;
@@ -73,7 +113,7 @@ body{
   overflow:hidden;
 }
 
-/* subtle pixel pattern */
+/* pixel pattern */
 .screen::after{
   content:"";
   position:absolute;
@@ -84,7 +124,7 @@ body{
   pointer-events:none;
 }
 
-/* editable message area */
+/* message area */
 .message{
   position:relative;
   z-index:3;
@@ -98,14 +138,12 @@ body{
   -webkit-user-modify: read-write;
   word-wrap: break-word;
 }
-
-/* placeholder */
 .message:empty:before{
   content: "Click here to write your answer to the client...";
   color: rgba(255,255,255,0.55);
 }
 
-/* speaker pill */
+/* speaker */
 .speaker {
   position:absolute;
   left:50%;
@@ -122,8 +160,6 @@ body{
   justify-content:center;
   box-shadow: 0 8px 18px rgba(0,0,0,0.28);
 }
-
-/* black oval inside speaker */
 .speaker::before{
   content:"";
   width: 62%;
@@ -132,29 +168,20 @@ body{
   background: #0b0b0b;
   box-shadow: inset 0 -3px 6px rgba(255,255,255,0.02);
 }
-
-/* wall hook shadow */
-.frame::before{
-  content:"";
-  position:absolute;
-  top:-8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width:12%;
-  height:8px;
-  background: rgba(0,0,0,0.06);
-  border-radius:6px;
-  filter: blur(2px);
-}
-
-@media (max-width:520px){
-  :root{ --inner-gap: 9%;}
-  .frame { border-width: 14px;}
-  .speaker { bottom: -10px; }
-}
 </style>
 </head>
 <body>
+
+<!-- INTRO VIDEO -->
+<div id="intro-screen">
+  <video autoplay muted playsinline>
+    <source src="Intro.mp4" type="video/mp4">
+  </video>
+  <button id="skip-btn">Skip</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
   <div class="tv">
     <div class="frame">
       <div class="color tl"></div>
@@ -171,5 +198,22 @@ body{
       <div class="speaker"></div>
     </div>
   </div>
+</div>
+
+<script>
+const intro = document.getElementById('intro-screen');
+const main = document.getElementById('main-content');
+const video = intro.querySelector('video');
+const skipBtn = document.getElementById('skip-btn');
+
+function showMain(){
+  intro.style.display = 'none';
+  main.style.display = 'flex';
+}
+
+video.addEventListener('ended', showMain);
+skipBtn.addEventListener('click', showMain);
+</script>
+
 </body>
 </html>
