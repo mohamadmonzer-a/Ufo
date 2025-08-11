@@ -8,6 +8,7 @@
 :root{
   --frame-main: #c92b2b;
   --frame-dark: #9e1f1f;
+  --under-edge: #4b2f21; /* darker wood for under edges */
   --purple: #6e3aa9;
   --mustard: #d7b634;
   --pink: #d36a9e;
@@ -84,12 +85,26 @@ html,body{
   box-sizing: border-box;
 }
 
+/* under-edge blocks (new) */
+.under-edge {
+  position: absolute;
+  z-index: 0;
+  background: var(--under-edge);
+  border-radius: 4px;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.4);
+}
+.under-edge.tl { top: calc(var(--inner-gap) - 5.5%); left: calc(var(--inner-gap) - 5.5%); width: 38%; height: 36%; }
+.under-edge.tr { top: calc(var(--inner-gap) - 5.5%); right: calc(var(--inner-gap) - 5.5%); width: 36%; height: 36%; }
+.under-edge.bl { bottom: calc(var(--inner-gap) - 5.5%); left: calc(var(--inner-gap) - 5.5%); width: 38%; height: 36%; }
+.under-edge.br { bottom: calc(var(--inner-gap) - 5.5%); right: calc(var(--inner-gap) - 5.5%); width: 36%; height: 36%; }
+
 /* colored blocks */
 .color {
   position:absolute;
   z-index:1;
   border-radius:4px;
   opacity:0.98;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
 }
 .color.tl { top: calc(var(--inner-gap) - 5%); left: calc(var(--inner-gap) - 5%); width: 38%; height: 36%; background: var(--purple);}
 .color.tr { top: calc(var(--inner-gap) - 5%); right: calc(var(--inner-gap) - 5%); width: 36%; height: 36%; background: var(--mustard);}
@@ -111,6 +126,7 @@ html,body{
   justify-content:center;
   border-radius:3px;
   overflow:hidden;
+  transform: translateZ(10px);
 }
 
 /* pixel pattern */
@@ -184,17 +200,27 @@ html,body{
 <div id="main-content">
   <div class="tv">
     <div class="frame">
+
+      <!-- under-edges -->
+      <div class="under-edge tl"></div>
+      <div class="under-edge tr"></div>
+      <div class="under-edge bl"></div>
+      <div class="under-edge br"></div>
+
+      <!-- colored blocks -->
       <div class="color tl"></div>
       <div class="color tr"></div>
       <div class="color bl"></div>
       <div class="color br"></div>
 
+      <!-- black screen -->
       <div class="screen">
         <div class="message" contenteditable="true">
           Hello — click here to type your answer to the client.
         </div>
       </div>
 
+      <!-- speaker -->
       <div class="speaker"></div>
     </div>
   </div>
